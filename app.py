@@ -237,6 +237,50 @@ def bootstrap():
         admin_pwd = os.environ.get("MW_ADMIN_PASSWORD", "admin123")
         db.create_user(admin_name, auth.hash_password(admin_pwd), is_admin=1)
         print(" * 已创建管理员：%s / %s（请尽快改掉）" % (admin_name, admin_pwd))
+    # 演示模式：线上给人点开看的时候不至于是一块空板
+    if os.environ.get("MW_SEED_DEMO") == "1" and db.count_messages() == 0:
+        seed_demo()
+
+
+# 演示数据（MW_SEED_DEMO=1 时使用）
+DEMO_USERS = [
+    ("xiaolin", "lin123456"),
+    ("amei", "amei123456"),
+    ("laozhou", "zhou123456"),
+]
+
+DEMO_MESSAGES = [
+    ("xiaolin", "打印机又卡纸了，二楼那台，纸好像受潮了。"),
+    ("amei", "年会抽奖能不能别用那个摇号软件了，去年抽到一半崩了。"),
+    ("laozhou", "建议给会议室加个预约白板，现在都是群里抢，经常撞车。"),
+    ("xiaolin", "下次团建想去露营，不想再爬山了，上次腿疼了三天。"),
+    ("amei", "打卡机偶尔识别不了指纹，站在那儿按七八次很尴尬，能不能加个工牌刷卡。"),
+    ("laozhou", "建议内网开个技术分享板块，最近组里几个人在做的东西互相都不知道。"),
+    ("xiaolin", "早高峰电梯排队太久了，八点五十到楼下基本要等两轮，能不能错峰。"),
+    ("amei", "想申请每周一天在家办公，出差多的活儿在家效率反而高一些。"),
+    ("laozhou", "文档站的搜索基本没用，搜关键词搜不到，建议换成全文检索。"),
+    ("xiaolin", "食堂三楼那个窗口能不能多给点米饭，每次都不够吃。"),
+    ("amei", "建议把周报模板简化一下，现在要填的项目太多，实质内容反而写不进去。"),
+    ("laozhou", "测试环境的数据库每周都被清一次，能不能保留一周的数据方便排查。"),
+]
+
+
+def seed_demo():
+    """灌入演示数据。
+
+    只在 MW_SEED_DEMO=1 且当前一条留言都没有时执行，不会覆盖真实数据。
+    """
+    ids = {}
+    for name, pwd in DEMO_USERS:
+        user = db.get_user_by_name(name)
+        if user is None:
+            db.create_user(name, auth.hash_password(pwd))
+            user = db.get_user_by_name(name)
+        ids[name] = user["id"]
+    for name, text in DEMO_MESSAGES:
+        db.add_message(ids[name], name, text)
+    print(" * 演示模式：已灌入 %d 条示例留言" % len(DEMO_MESSAGES))
+
 
 
 bootstrap()

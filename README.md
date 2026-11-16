@@ -53,6 +53,9 @@ export MW_SECRET_KEY=$(python -c "import secrets;print(secrets.token_hex(16))")
 
 在 Windows PowerShell 里对应 `$env:MW_ADMIN_USER="your_name"`。
 
+**想先看看效果**：设 `MW_SEED_DEMO=1`，首次启动会灌 12 条示例留言和 3 个演示账号（xiaolin / lin123456 等），
+只在数据库为空时执行一次，不会覆盖真实数据。
+
 ## 目录结构
 
 ```
