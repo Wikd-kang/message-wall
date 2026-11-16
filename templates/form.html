@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}写留言{% endblock %}
+
+{% block content %}
+<section class="panel narrow">
+  <h1>写留言</h1>
+  <p class="muted">以 <strong>{{ current_user['username'] }}</strong> 的身份发布，最多 500 字。</p>
+
+  <form method="post" action="{{ url_for('post') }}" class="form">
+    <label for="content">留言内容</label>
+    <textarea id="content" name="content" rows="6" maxlength="500"
+              placeholder="想说什么？">{{ content }}</textarea>
+    <div class="form-actions">
+      <button class="btn" type="submit">发布</button>
+      <a class="btn ghost" href="{{ url_for('index') }}">取消</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

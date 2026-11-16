@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}后台{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <h1>管理后台</h1>
+  <p>一共 <strong>{{ total }}</strong> 条留言，可以整表导出成 Excel 交给客户。</p>
+  <div class="toolbar">
+    <a class="btn" href="{{ url_for('export_xlsx') }}">导出 Excel</a>
+    <a class="btn ghost" href="{{ url_for('index') }}">回前台</a>
+  </div>
+</section>
+
+<div class="table-wrap">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>编号</th><th>留言人</th><th>账号</th><th>内容</th><th>时间</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in rows %}
+      <tr>
+        <td>{{ r['id'] }}</td>
+        <td>{{ r['author_name'] }}</td>
+        <td>{{ r['owner'] or '（已注销）' }}</td>
+        <td class="content-cell">{{ r['content'] }}</td>
+        <td class="nowrap">{{ r['created_at'] }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="muted">还没有留言</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

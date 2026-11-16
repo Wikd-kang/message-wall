@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}全部留言{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <h1>留言板</h1>
+  <p>
+    一共 <strong>{{ total }}</strong> 条留言{% if kw %}，当前显示「{{ kw }}」的搜索结果{% endif %}。
+  </p>
+  <form class="search" method="get" action="{{ url_for('index') }}">
+    <input type="text" name="kw" value="{{ kw }}" placeholder="搜内容或留言人…">
+    <button type="submit">搜索</button>
+    {% if kw %}<a class="clear" href="{{ url_for('index') }}">清空</a>{% endif %}
+  </form>
+</section>
+
+{% if messages %}
+<ul class="list">
+  {% for m in messages %}
+  <li class="card">
+    <div class="meta">
+      <span class="who">{{ m['author_name'] }}</span>
+      <span class="time">{{ m['created_at'] }}</span>
+    </div>
+    <p class="text">{{ m['content'] }}</p>
+    {% if current_user and (current_user['id'] == m['user_id'] or current_user['is_admin']) %}
+    <form method="post" action="{{ url_for('delete', mid=m['id']) }}"
+          onsubmit="return confirm('确定要删除这条留言吗？');">
+      <button class="btn-del" type="submit">删除</button>
+    </form>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>
+
+{% if pages > 1 %}
+<nav class="pager">
+  {% if page > 1 %}
+    <a href="{{ url_for('index', kw=kw, page=page-1) }}">上一页</a>
+  {% else %}
+    <span class="disabled">上一页</span>
+  {% endif %}
+  <span class="pager-info">{{ page }} / {{ pages }}</span>
+  {% if page < pages %}
+    <a href="{{ url_for('index', kw=kw, page=page+1) }}">下一页</a>
+  {% else %}
+    <span class="disabled">下一页</span>
+  {% endif %}
+</nav>
+{% endif %}
+
+{% else %}
+<div class="empty">
+  <p>{% if kw %}没有找到包含「{{ kw }}」的留言{% else %}还没有留言，来做第一个吧{% endif %}</p>
+  <a class="btn" href="{{ url_for('post') }}">写一条留言</a>
+</div>
+{% endif %}
+{% endblock %}
