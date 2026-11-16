@@ -88,14 +88,22 @@ python tests/selftest.py
 
 ## 部署
 
-最省事的方式是 PythonAnywhere 免费版：
+### Render（免费方案）
 
-1. 上传代码或从 GitHub clone
-2. 建一个 Flask Web App，WSGI 文件里指向 `app:app`
-3. 在 Web 面板设置环境变量 `MW_SECRET_KEY`、`MW_ADMIN_PASSWORD`
-4. Reload
+1. 把仓库连到 Render，New → Web Service，语言选 Python
+2. Build Command：`pip install -r requirements.txt`
+3. Start Command：`gunicorn app:app`
+4. 环境变量加 `MW_SECRET_KEY`、`MW_ADMIN_USER`、`MW_ADMIN_PASSWORD`（**别用默认密码上线**）
+5. 部署完成会拿到 `https://xxx.onrender.com`
 
-也可以直接 `gunicorn app:app` 跑在任何支持 Python 的服务器上。
+两个免费实例的注意事项：
+
+- 15 分钟无访问会休眠，下次访问要等约 50 秒冷启动
+- 没有持久磁盘，重新部署后 `messages.db` 会重置。演示够用，正式用请挂 Render Disk 或改用 PostgreSQL
+
+### 其他平台
+
+`gunicorn app:app` 可以跑在任何支持 Python 的服务器。PythonAnywhere 免费版也行（WSGI 指向 `app:app`）。
 
 ## 已知限制
 
