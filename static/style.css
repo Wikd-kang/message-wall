@@ -98,6 +98,8 @@ main { flex: 1; padding-top: 32px; padding-bottom: 48px; }
 }
 .hero p { margin: 0 0 18px; color: var(--muted); }
 .hero strong { color: var(--blue); }
+.hero .hint-login { font-size: 13.5px; margin: -8px 0 18px; }
+.hero .hint-login a { color: var(--blue); text-decoration: none; font-weight: 600; }
 
 /* ---------------------------------------------------------------- 搜索 */
 .search { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }

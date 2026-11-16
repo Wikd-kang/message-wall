@@ -3,10 +3,13 @@
 
 {% block content %}
 <section class="hero">
-  <h1>留言板</h1>
+  <h1>全部留言</h1>
   <p>
     一共 <strong>{{ total }}</strong> 条留言{% if kw %}，当前显示「{{ kw }}」的搜索结果{% endif %}。
   </p>
+  {% if not current_user %}
+  <p class="hint-login">想留言？<a href="{{ url_for('login') }}">登录</a> 或 <a href="{{ url_for('register') }}">注册</a> 一个账号。</p>
+  {% endif %}
   <form class="search" method="get" action="{{ url_for('index') }}">
     <input type="text" name="kw" value="{{ kw }}" placeholder="搜内容或留言人…">
     <button type="submit">搜索</button>
